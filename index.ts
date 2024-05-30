@@ -2,6 +2,7 @@ import type {
   ReplaceMultipleStringParts,
   ReplaceStringPart,
   ReplaceAllStringParts,
+  ReplaceOrderedStringParts,
 } from "rolling-ts-utils";
 
 export function replace<
@@ -20,17 +21,32 @@ export function replace<
   >;
 }
 
-export function replaceMutiple<
+export function replaceOrdered<
   OriginalString extends string,
   Values extends string[]
 >(
   str: OriginalString,
   values: Values
-): ReplaceMultipleStringParts<OriginalString, Values> {
+): ReplaceOrderedStringParts<OriginalString, Values> {
   return values.reduce(
     (acc, value) => acc.replace(/{{(.*?)}}/, value),
     str
-  ) as ReplaceMultipleStringParts<OriginalString, Values>;
+  ) as ReplaceOrderedStringParts<OriginalString, Values>;
+}
+
+export function replaceMultiple<
+  OriginalString extends string,
+  Keys extends Readonly<string[]>,
+  Values extends Readonly<string[]>
+>(
+  str: OriginalString,
+  Keys: Keys,
+  Values: Values
+): ReplaceMultipleStringParts<OriginalString, Keys, Values> {
+  return Keys.reduce(
+    (acc, key, i) => acc.replace(new RegExp(`${key}`), Values[i]),
+    str
+  ) as ReplaceMultipleStringParts<OriginalString, Keys, Values>;
 }
 
 export function replaceAll<OriginalString extends string, Value extends string>(

@@ -1,6 +1,6 @@
 {
   "name": "string-replace-utils",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "type": "module",
@@ -28,7 +28,7 @@
   "description": "A small library which exposes some helpful string-replacement functions, including exact types",
   "devDependencies": {
     "@types/node": "^20.12.12",
-    "rolling-ts-utils": "^1.0.3",
+    "rolling-ts-utils": "^1.0.5",
     "typescript": "^5.4.5"
   }
 }

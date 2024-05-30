@@ -2,6 +2,8 @@
 
 A small library which exposes some helpful string-replacement functions, including exact types. Types used here come from [rolling-ts-utils](https://github.com/twilkinson3421/rolling-ts-utils).
 
+> **⚠️ Pay attention to the use of `as const` throughout this document. Not using `as const` after string and array initialisation will result in generic types being used, or unexpected behaviour!**
+
 ## Installation
 
 ```bash
@@ -35,7 +37,7 @@ const sentence = replace(str, "{noun}", "dog");
 //    ^? typeof sentence = "This is an example dog"
 ```
 
-### `replaceMutiple(str, values)`
+### `replaceOrdered(str, values)`
 
 - `str`: The original string
 - `values`: An array containing the strings to be inserted in place of, in order, each occurance of `{string}`, where `string` is any string
@@ -44,7 +46,25 @@ const sentence = replace(str, "{noun}", "dog");
 ```ts
 const str = "This is {article} {adjective} {noun}." as const;
 
-const sentence = replaceMutiple(str, ["a", "sneaky", "cat"]);
+const sentence = replaceOrdered(str, ["a", "sneaky", "cat"] as const);
+//    ^? typeof sentence = "This is a sneaky cat."
+```
+
+### `replaceMultiple(str, keys, values)`
+
+- `str`: The original string
+- `keys`: An array containing the substrings to be replaced
+- `values`: An array of strings to be inserted in place of the key at the same position in the `Keys` array
+- _If no match is found, the key-value pair has no impact_
+
+```ts
+const str = "This is {article} {adjective} {noun}." as const;
+
+const sentence = replaceMultiple(
+  str,
+  ["{article}", "{adjective}", "{noun}"] as const,
+  ["a", "sneaky", "cat"] as const
+);
 //    ^? typeof sentence = "This is a sneaky cat."
 ```
 
@@ -62,7 +82,9 @@ const sentence = replaceAll(str, "cat");
 
 ### Weak Functions
 
-A weak version of `replaceMultiple` is provided in `weak.ts`. This function does not support exact types, but is more powerful than the regular `replaceMutiple` function, as it allows strings to be matched by key-value pairs:
+A weak version of `replaceMultiple` is provided in `weak.ts`. This function does not support exact types, but allows key-value pairs to be passed as an array of `{key, value}` objects.
+
+_This was more useful in the past when the `replaceMultiple` function had the same functionality as the current `replaceOrdered` function (thus this was the only way to replace specified substrings)_:
 
 ```ts
 const str = "This is {article} {adjective} {noun}." as const;
@@ -80,24 +102,32 @@ const sentence = weakReplaceMultiple(str, [
 
 _String Replace Utils_ also provides a class, `Replaceable`, which allows `replace`, `replaceMutiple`, and `replaceAll` to be chained together, or to provide the methods on a function return value.
 
-As the class extends `String`, it can be used in the same way as a normal string _(though asserting `as string`, or widening accepted parameter-types to include `Replaceable` may be necessary to prevent Type errors on functions which take string parameters)_.
+As the class extends `String`, it can be used in the same way as a normal string _(though asserting `as string`, or widening accepted parameter-types to include `Replaceable<string>` may be necessary to prevent Type errors on functions which take string parameters)_. Alternatively, use `.valueOf()` to get the raw string, as in the examples below.
 
-**Some methods do not share the same name as the pure functions:**
+**⚠️ Some methods do not share the same name as the pure functions:**
 
 - **`replace` becomes `extReplace`**
 - **`replaceAll` becomes `extReplaceAll`**
 
-_Be aware that exact types will not work when using the `Replaceable` type as it is not possible to determine the exact type of the constructor parameter_
-
 ```ts
-const str = "This is {article} {adjective} {noun}." as const;
+const str = new Replaceable("This is {article} {adjective} {noun}." as const);
 
-const sentence = new Replaceable(str);
-
-const modified = sentence
+const sentence = str
   .extReplace("{article}", "a")
   .extReplace("{adjective}", "sneaky")
-  .extReplace("{noun}", "cat");
-//    ^? "This is a sneaky cat"
-//    typeof sentence = Replaceable
+  .extReplace("{noun}", "cat")
+  .valueOf();
+//    ^? typeof sentence = "This is a sneaky cat."
+```
+
+```ts
+const str = new Replaceable("This is {article} {adjective} {noun}." as const);
+
+const sentence = str
+  .replaceMultiple(
+    ["{article}", "{adjective}", "{noun}"] as const,
+    ["a", "pesky", "goose"] as const
+  )
+  .valueOf();
+//    ^? typeof sentence = "This is a pesky goose."
 ```

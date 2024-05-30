@@ -1,26 +1,41 @@
 import {
-    replace as func_replace, replaceAll as func_replaceAll, replaceMutiple as func_replaceMutiple
+    replace as func_replace, replaceAll as func_replaceAll, replaceMultiple as func_replaceMultiple,
+    replaceOrdered as func_replaceOrdered
 } from "./index.js";
-import { weakReplaceMultiple as weak_replaceMutiple } from "./weak.js";
+import { weakReplaceMultiple as weak_replaceMultiple } from "./weak.js";
 
-export class Replaceable extends String {
-  constructor(value: string) {
+export class Replaceable<OriginalString extends string> extends String {
+  constructor(value: OriginalString) {
     super(value);
   }
 
-  public extReplace(key: string, value: string) {
+  public extReplace<Key extends string, Value extends string>(
+    key: Key,
+    value: Value
+  ) {
     return new Replaceable(func_replace(this.valueOf(), key, value));
   }
 
-  public replaceMultiple(values: string[]) {
-    return new Replaceable(func_replaceMutiple(this.valueOf(), values));
+  public replaceOrdered<Values extends string[]>(values: Values) {
+    return new Replaceable(func_replaceOrdered(this.valueOf(), values));
   }
 
-  public extReplaceAll(value: string) {
+  public replaceMultiple<Keys extends string[], Values extends string[]>(
+    keys: Keys,
+    values: Values
+  ) {
+    return new Replaceable(func_replaceMultiple(this.valueOf(), keys, values));
+  }
+
+  public extReplaceAll<Value extends string>(value: Value) {
     return new Replaceable(func_replaceAll(this.valueOf(), value));
   }
 
   public weakReplaceMultiple(values: { key: string; value: string }[]) {
-    return new Replaceable(weak_replaceMutiple(this.valueOf(), values));
+    return new Replaceable(weak_replaceMultiple(this.valueOf(), values));
+  }
+
+  public override valueOf(): OriginalString {
+    return this.valueOf();
   }
 }

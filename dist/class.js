@@ -1,5 +1,5 @@
-import { replace as func_replace, replaceAll as func_replaceAll, replaceMutiple as func_replaceMutiple } from "./index.js";
-import { weakReplaceMultiple as weak_replaceMutiple } from "./weak.js";
+import { replace as func_replace, replaceAll as func_replaceAll, replaceMultiple as func_replaceMultiple, replaceOrdered as func_replaceOrdered } from "./index.js";
+import { weakReplaceMultiple as weak_replaceMultiple } from "./weak.js";
 export class Replaceable extends String {
     constructor(value) {
         super(value);
@@ -7,13 +7,19 @@ export class Replaceable extends String {
     extReplace(key, value) {
         return new Replaceable(func_replace(this.valueOf(), key, value));
     }
-    replaceMultiple(values) {
-        return new Replaceable(func_replaceMutiple(this.valueOf(), values));
+    replaceOrdered(values) {
+        return new Replaceable(func_replaceOrdered(this.valueOf(), values));
+    }
+    replaceMultiple(keys, values) {
+        return new Replaceable(func_replaceMultiple(this.valueOf(), keys, values));
     }
     extReplaceAll(value) {
         return new Replaceable(func_replaceAll(this.valueOf(), value));
     }
     weakReplaceMultiple(values) {
-        return new Replaceable(weak_replaceMutiple(this.valueOf(), values));
+        return new Replaceable(weak_replaceMultiple(this.valueOf(), values));
+    }
+    valueOf() {
+        return this.valueOf();
     }
 }
