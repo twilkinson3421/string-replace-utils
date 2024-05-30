@@ -27,7 +27,7 @@ const sentence = replace(str, "{noun}", "dog");
 
 - `str`: The original string
 - `key`: The substring to be replaced
-- `value`: The string to be inserted in place of the key
+- `value`: The string to be inserted in place of the first occurance of `key`
 - _If no match is found, the original string is returned_
 
 ```ts
@@ -35,6 +35,20 @@ const str = "This is an example {noun}" as const;
 
 const sentence = replace(str, "{noun}", "dog");
 //    ^? typeof sentence = "This is an example dog"
+```
+
+### `replaceGlobal(str, key, value)`
+
+- `str`: The original string
+- `key`: The substring to be replaced
+- `value`: The string to be inserted in place of **ALL** occurances of `key`
+- _If no match is found, the original string is returned_
+
+```ts
+const str = "This is {word} {word} {thing}" as const;
+
+const sentence = replaceGlobal(str, "{word}", "dog");
+//    ^? typeof sentence = "This is dog dog {thing}"
 ```
 
 ### `replaceOrdered(str, values)`
@@ -100,14 +114,14 @@ const sentence = weakReplaceMultiple(str, [
 
 ### Replaceable Class
 
-_String Replace Utils_ also provides a class, `Replaceable`, which allows `replace`, `replaceMutiple`, and `replaceAll` to be chained together, or to provide the methods on a function return value.
+_String Replace Utils_ also provides a class, `Replaceable`, containing all of the methods provided by the pure functions, to allow for chaining methods.
 
 As the class extends `String`, it can be used in the same way as a normal string _(though asserting `as string`, or widening accepted parameter-types to include `Replaceable<string>` may be necessary to prevent Type errors on functions which take string parameters)_. Alternatively, use `.valueOf()` to get the raw string, as in the examples below.
 
 **⚠️ Some methods do not share the same name as the pure functions:**
 
-- **`replace` becomes `extReplace`**
-- **`replaceAll` becomes `extReplaceAll`**
+- **`replace` becomes `extReplace` to avoid conflict with `String.prototype.replace()`**
+- **`replaceAll` becomes `extReplaceAll` to avoid conflict with `String.prototype.replaceAll()`**
 
 ```ts
 const str = new Replaceable("This is {article} {adjective} {noun}." as const);

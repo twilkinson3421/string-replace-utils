@@ -3,6 +3,7 @@ import type {
   ReplaceStringPart,
   ReplaceAllStringParts,
   ReplaceOrderedStringParts,
+  ReplaceStringPartGlobal,
 } from "rolling-ts-utils";
 
 export function replace<
@@ -21,6 +22,21 @@ export function replace<
   >;
 }
 
+export function replaceGlobal<
+  OriginalString extends string,
+  Key extends string,
+  Value extends string
+>(
+  str: OriginalString,
+  key: Key,
+  value: Value
+): ReplaceStringPartGlobal<OriginalString, Value, Key> {
+  return str.replace(
+    new RegExp(`${key}`, "g"),
+    value
+  ) as ReplaceStringPartGlobal<OriginalString, Value, Key>;
+}
+
 export function replaceOrdered<
   OriginalString extends string,
   Values extends string[]
@@ -29,7 +45,7 @@ export function replaceOrdered<
   values: Values
 ): ReplaceOrderedStringParts<OriginalString, Values> {
   return values.reduce(
-    (acc, value) => acc.replace(/{{(.*?)}}/, value),
+    (acc, value) => acc.replace(/{(.*?)}/, value),
     str
   ) as ReplaceOrderedStringParts<OriginalString, Values>;
 }
@@ -53,7 +69,7 @@ export function replaceAll<OriginalString extends string, Value extends string>(
   str: OriginalString,
   value: Value
 ): ReplaceAllStringParts<OriginalString, Value> {
-  return str.replace(/{{(.*?)}}/g, value) as ReplaceAllStringParts<
+  return str.replace(/{(.*?)}/g, value) as ReplaceAllStringParts<
     OriginalString,
     Value
   >;
