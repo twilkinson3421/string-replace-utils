@@ -1,0 +1,27 @@
+{
+  "name": "string-replace-utils",
+  "version": "1.0.0",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "type": "module",
+  "scripts": {
+    "build": "tsc"
+  },
+  "homepage": "https://github.com/twilkinson3421/react-replace-utils#readme",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/twilkinson3421/react-replace-utils.git"
+  },
+  "keywords": [],
+  "author": {
+    "name": "Thomas Wilkinson",
+    "url": "https://github.com/twilkinson3421"
+  },
+  "license": "MIT",
+  "description": "",
+  "devDependencies": {
+    "@types/node": "^20.12.12",
+    "rolling-ts-utils": "^1.0.3",
+    "typescript": "^5.4.5"
+  }
+}
