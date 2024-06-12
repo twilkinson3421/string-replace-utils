@@ -23,6 +23,6 @@ export class Replaceable extends String {
         return new Replaceable(weak_replaceMultiple(this.valueOf(), values));
     }
     valueOf() {
-        return this.valueOf();
+        return this.toString();
     }
 }
