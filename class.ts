@@ -1,6 +1,9 @@
 import {
-    replace as func_replace, replaceAll as func_replaceAll, replaceGlobal as func_replaceGlobal,
-    replaceMultiple as func_replaceMultiple, replaceOrdered as func_replaceOrdered
+  replace as func_replace,
+  replaceAll as func_replaceAll,
+  replaceGlobal as func_replaceGlobal,
+  replaceMultiple as func_replaceMultiple,
+  replaceOrdered as func_replaceOrdered
 } from "./index.js";
 import { weakReplaceMultiple as weak_replaceMultiple } from "./weak.js";
 
@@ -43,6 +46,6 @@ export class Replaceable<OriginalString extends string> extends String {
   }
 
   public override valueOf(): OriginalString {
-    return this.valueOf();
+    return this.toString() as OriginalString;
   }
 }
